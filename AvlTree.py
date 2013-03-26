@@ -1,20 +1,19 @@
 class AvlNode:
-    """
-    An interface for an sorted binary tree.
+    """ An interface for an sorted binary tree.
 
-    Implementation notes:
-    Implemented as Balanced BST (AVL tree)
-    Sorted from left/min to right/max
-    Works by default for any objects with defined comparison operators
+        Implementation notes:
+        Implemented as Balanced BST (AVL tree)
+        Sorted from left/min to right/max
+        Works by default for any objects with defined comparison operators
     
-    You can use IBinNode directly, but need to resave root after ever insertion
-    ie: "b = b.insert(5)" instead of "b.insert(5)", as b may no longer be the root
-    Use the IBinTree wrapper class (below) if you don't want to deal with this
+        You can use IBinNode directly, but need to resave root after ever insertion
+        ie: "b = b.insert(5)" instead of "b.insert(5)", as b may no longer be the root
+        Use the IBinTree wrapper class (below) if you don't want to deal with this
     
-    Duplicates are handled by keeping an internal "dups" count at each node
-    and incrementing w/e a duplicate value is added
+        Duplicates are handled by keeping an internal "dups" count at each node
+        and incrementing w/e a duplicate value is added
     
-    This can easily be extended to store key,value pairs
+        This can easily be extended to store key,value pairs
     """
 
     def __init__(self, value=None):
@@ -55,12 +54,9 @@ class AvlNode:
     
 
     def insert(self, value): 
-    	"""
-    	Insert an object into the binary tree. 
-    	Note: The tree should be sorted, inserting the same object 
-    	twice is allowed but the insert is expected to be stable.
+    	""" Insert an object into the binary tree. 
         
-        Returns new root.
+            Returns new root.
     	"""
         # examine current node
         if self.value is None:
@@ -145,9 +141,7 @@ class AvlNode:
         return self.left.height - self.right.height
             
     def insertAll(self, values): 
-    	"""
-    	Batch-insert multiple elements.
-        Ryan: I changed the var name, as list conflicts with a keyword
+    	""" Batch-insert multiple elements.
     	"""
         root = self
         for x in values:
@@ -155,8 +149,10 @@ class AvlNode:
         return root
     
     def delete(self, value):
-        """ Deletes node containing value
-            maintains balance
+        """ Deletes node containing value.
+            If value has been inserted multiple times,
+            only deletes single occurance.
+            Maintains balance.
         """
         if self.value is None:
             # base case
@@ -220,9 +216,8 @@ class AvlNode:
                 return (maxtup[0], False, newRoot)
     
     def contains(self, value): 
-    	"""
-    	Check if the object is already in the tree. 
-    	Return true if it is, false otherwise.
+    	""" Check if the object is already in the tree. 
+        	Return true if it is, false otherwise.
     	"""
         if self.value is None:
             return False
@@ -261,29 +256,24 @@ class AvlTree:
         return self.root.__iter__()
     
     def insert(self, value):
-    	"""
-    	Insert an object into the binary tree. 
-    	Note: The tree should be sorted, inserting the same object 
-    	twice is allowed but the insert is expected to be stable.
-        
-        Returns new root.
+    	""" Insert an object into the binary tree.
     	"""
         self.root = self.root.insert(value)
     
     def insertAll(self, values):
-    	"""
-    	Batch-insert multiple elements.
-        Ryan: I changed the var name, as list conflicts with a keyword
+    	""" Batch-insert multiple elements.
     	"""
         self.root = self.root.insertAll(values)
     
     def delete(self, value):
+        """ Delete the value from the tree
+            If value has been inserted more than once,
+            Only one instance will be erased
+        """
         self.root = self.root.delete(value)
     
     def contains(self, value):
-    	"""
-    	Check if the object is already in the tree. 
-    	Return true if it is, false otherwise.
+    	""" Check if the object is already in the tree.
     	"""
         return self.root.contains(value)
     
