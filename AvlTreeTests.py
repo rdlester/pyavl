@@ -1,5 +1,6 @@
 from AvlTree import *
 from random import randint
+import ipdb
 
 """ Set of tests for IBinTree implementation
 """
@@ -45,6 +46,25 @@ assert b.contains(10)
 
 assert not b.contains(100)
 assert not b.contains(-1)
+
+# test deletion
+b.delete(2)
+assert root.left.value == 1
+
+b.delete(1)
+assert root.left.value == 3
+assert root.left.height == 0
+
+b.delete(3)
+newRoot = b.root
+assert newRoot.value == 9
+assert newRoot.height == 2
+assert newRoot.left.value == 5
+assert newRoot.left.height == 1
+assert newRoot.left.right.value == 8
+assert newRoot.left.right.height == 0
+assert newRoot.right.value == 10
+assert newRoot.right.height == 0
 
 # check dups (and normal insert)
 bdup = AvlTree()

@@ -98,16 +98,16 @@ class AvlNode:
         if balance < -1:
             # rebalance right
             rbalance = self.right.balanceDiff()
-            if rbalance == -1:
+            if rbalance == -1 or rbalance == 0:
                 return self.rotateLeft()
-            if rbalance == 1:
+            elif rbalance == 1:
                 self.right = self.right.rotateRight()
                 return self.rotateLeft()
                 
         elif balance > 1:
             # rebalance left
             lbalance = self.left.balanceDiff()
-            if lbalance == 1:
+            if lbalance == 1 or lbalance == 0:
                 return self.rotateRight()
             elif lbalance == -1:
                 self.left = self.left.rotateLeft()
@@ -166,16 +166,25 @@ class AvlNode:
             if self.value == value:
                 # delete something
                 if self.dups > 1:
+                    # don't need to fully delete node
                     self.dups = self.dups - 1
                     return self
                 else:
+                    # delete node
                     # replace root w/ max from left subtree
                     # and rebalance
-                    newRoot = findMax(self.left)[0]
-                    newRoot.left = self.left
-                    newRoot.right = self.right
-                    newRoot.height = max(newRoot.left.height+1, newRoot.right.height+1)
-                    return newRoot.checkBalance()
+                    maxtup = self.left.findMax()
+                    newRoot = maxtup[0]
+                    if newRoot.value is not None:
+                        # there is something in left subtree
+                        newRoot.left = maxtup[2]
+                        newRoot.right = self.right
+                        newRoot.height = max(newRoot.left.height+1, newRoot.right.height+1)
+                        return newRoot.correctBalance()
+                    else:
+                        # there is nothing from left subtree, take from right
+                        # height doesn't change, don't need to rebalance
+                        return self.right
             else:
                 # keep searching
                 if value < self.value:
@@ -184,36 +193,31 @@ class AvlNode:
                     self.right = self.right.delete(value)
                 
                 self.height = max(self.left.height+1, self.right.height+1)
-                return self.checkBalance()
+                return self.correctBalance()
 
     def findMax(self):
         """ Helper for delete routine
             Finds max node in subtree
             return it and delete it
             Returns tuple, element 0 is the max node you'll want
+            Element 1 is True if max was just found
+            Element 2 is new right node
         """
         if self.value is None:
-            return (None, false, self)
+            return (self, False, self)
         else:
-            maxtup = findMax(self.right)
-            if maxtup[0] is None:
+            maxtup = self.right.findMax()
+            if maxtup[0].value is None:
                 # return self and set second entry in tuple to true
                 # to signal parent to remove max node
-                return (self, true, None)
-            elif maxtup[1]:
-                # delete the max node
-                # set to max node's left
-                # (so we don't accidentally delete something)
-                self.right = maxtup[0].left
+                return (self, True, self.left)
+            else:
+                # replace right node w/ new root
+                # rebalance and pass up
+                self.right = maxtup[2]
                 self.height = max(self.height, self.right.height+1)
                 newRoot = self.correctBalance()
-                return (maxtup[0], false, newRoot)
-            else:
-                # set new right and correct balance
-                self.right = maxtup[3]
-                self.height = max(self.height, self.right.height+1)
-                maxtup[2] = self.correctBalance()
-                return maxtup
+                return (maxtup[0], False, newRoot)
     
     def contains(self, value): 
     	"""
