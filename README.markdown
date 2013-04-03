@@ -20,4 +20,4 @@ To use:
     b.delete(3)
 
     for x in b:
-        # do stuff
+        # iterator yields items in ascending sorted order
