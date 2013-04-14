@@ -1,4 +1,4 @@
-AvlTree
+pyavl
 
 An implementation of AVL trees in Python.
 Handles duplicate items.
