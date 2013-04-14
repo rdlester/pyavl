@@ -6,7 +6,7 @@ Works on any datatype for which comparison operators are defined (tested on stri
 
 To run tests:
 
-    python path/to/AvlTreeTests.py
+    python path/to/pyavlTests.py
 
 To use:
 
