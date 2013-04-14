@@ -10,7 +10,7 @@ To run tests:
 
 To use:
 
-    from AvlTree import AvlTree
+    from pyavl import AvlTree
 
     b = AvlTree()
 
